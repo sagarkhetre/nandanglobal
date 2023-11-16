@@ -44,3 +44,22 @@ function yh_display_username_wp_menu( $menu_items ) {
     return $menu_items;
 }
 add_filter( 'wp_nav_menu_objects', 'yh_display_username_wp_menu' );
+
+
+function my_prefix_custom_activity_triggers( $triggers ) {
+    $triggers['My Custom Events'] = array(
+        'gamipress_publish_post' => __( 'Gamipress Publish Post', 'gamipress' ),
+    );
+    return $triggers;
+}
+add_filter( 'gamipress_activity_triggers', 'my_prefix_custom_activity_triggers' );
+
+function my_prefix_custom_listener( $args ) {
+    gamipress_trigger_event( array(
+        'event' => 'gamipress_publish_post',
+        'user_id' => get_current_user_id()
+    ) );
+}
+
+add_action( 'action_we_want_to_hook', 'my_prefix_custom_listener' );
+
